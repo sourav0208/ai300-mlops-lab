@@ -1,0 +1,49 @@
+name: Verify Azure Connection
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-azure:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Sign in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Verify Azure subscription
+        run: |
+          az account show \
+            --query "{name:name, state:state}" \
+            --output json
+
+      - name: Verify Azure ML workspace
+        env:
+          RG: ${{ vars.AZURE_RESOURCE_GROUP }}
+          WS: ${{ vars.AZURE_WORKSPACE_NAME }}
+        run: |
+          test -n "$RG" || {
+            echo "Resource group variable is missing."
+            exit 1
+          }
+
+          test -n "$WS" || {
+            echo "Workspace variable is missing."
+            exit 1
+          }
+
+          SUB=$(az account show --query id -o tsv)
+
+          az rest \
+            --method get \
+            --url "https://management.azure.com/subscriptions/${SUB}/resourceGroups/${RG}/providers/Microsoft.MachineLearningServices/workspaces/${WS}?api-version=2024-04-01" \
+            --query "{name:name, location:location, state:properties.provisioningState}" \
+            --output json
