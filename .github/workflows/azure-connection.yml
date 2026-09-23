@@ -40,3 +40,11 @@ jobs:
             --url "https://management.azure.com/subscriptions/${SUB}/resourceGroups/${RG}/providers/Microsoft.MachineLearningServices/workspaces/${WS}?api-version=2024-04-01" \
             --query "{name:name, location:location, state:properties.provisioningState}" \
             --output json
+
+      - name: Test Azure ML CLI
+        run: |
+          az extension add --name ml --version 2.44.1 --yes
+
+          az ml workspace show \
+            --resource-group "${{ vars.AZURE_RESOURCE_GROUP }}" \
+            --name "${{ vars.AZURE_WORKSPACE_NAME }}"
