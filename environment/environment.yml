@@ -1,0 +1,10 @@
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+
+name: ai300-training-env
+version: "1"
+
+description: Custom Python environment for AI-300 diabetes training
+
+image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu22.04:latest
+
+conda_file: conda.yml
