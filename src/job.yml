@@ -13,7 +13,7 @@ inputs:
 outputs:
   metrics_output:
     type: uri_folder
-environment: azureml:ai300-training-env:1
+environment: azureml:ai300-training-env:2
 compute: azureml:aml-cluster-small
 experiment_name: diabetes-training
 display_name: diabetes-train-command
