@@ -1,7 +1,7 @@
 $schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
 
 name: ai300-training-env
-version: "1"
+version: "2"
 
 description: Custom Python environment for AI-300 diabetes training
 

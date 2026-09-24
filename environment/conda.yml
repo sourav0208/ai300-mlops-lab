@@ -11,5 +11,5 @@ dependencies:
   - scikit-learn
   - matplotlib
   - pip:
-      - mlflow
-      - azureml-mlflow
+      - mlflow==2.22.1
+      - azureml-mlflow==1.62.0.post6
