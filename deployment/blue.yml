@@ -5,6 +5,10 @@ endpoint_name: diabetes-sourav-endpoint
 
 model: azureml:diabetes-classification-model:1
 
+code_configuration:
+  code: ./code
+  scoring_script: score.py
+
 environment:
   image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu22.04
   conda_file: conda.yml
