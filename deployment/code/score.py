@@ -9,7 +9,11 @@ model = None
 def init():
     global model
 
-    model_path = os.environ["AZUREML_MODEL_DIR"]
+    model_root = os.environ["AZUREML_MODEL_DIR"]
+    model_path = os.path.join(model_root, "model_output")
+
+    print(f"Loading model from: {model_path}")
+
     model = mlflow.pyfunc.load_model(model_path)
 
     print("Model loaded successfully")
