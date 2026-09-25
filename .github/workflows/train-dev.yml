@@ -77,7 +77,7 @@ jobs:
           RG: ${{ vars.AZURE_RESOURCE_GROUP }}
           WS: ${{ vars.AZURE_WORKSPACE_NAME }}
         
-        runs: |
+        run: |
           az ml model create \
             --name diabetes-classification-model \
             --type mlflow_model \
