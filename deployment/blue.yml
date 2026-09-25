@@ -13,5 +13,8 @@ environment:
   image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu22.04
   conda_file: conda.yml
 
+environment_variables:
+  DEPLOYMENT_NAME: blue
+
 instance_type: Standard_D2a_v4 #what size VM should serve predictions
 instance_count: 1 # how many of those VM should run. More VM to handle more traffic

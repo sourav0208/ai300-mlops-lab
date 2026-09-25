@@ -21,6 +21,8 @@ def init():
 
 def run(raw_data):
     data = json.loads(raw_data)
+    deployment_name = os.environ.get("DEPLOYMENT_NAME", "unknown")
+
 
     columns = data["input_data"]["columns"]
     rows = data["input_data"]["data"]
@@ -30,5 +32,6 @@ def run(raw_data):
     predictions = model.predict(df)
 
     return {
+        "deployment": deployment_name,
         "predictions": predictions.tolist()
     }
