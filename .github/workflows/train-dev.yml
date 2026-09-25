@@ -71,3 +71,16 @@ jobs:
           echo "- Azure ML job: ${{ steps.train.outputs.job_name }}" >> "$GITHUB_STEP_SUMMARY"
           echo "- Accuracy: $ACC" >> "$GITHUB_STEP_SUMMARY"
           echo "- AUC: $AUC" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Register trained model
+        env:
+          RG: ${{ vars.AZURE_RESOURCE_GROUP }}
+          WS: ${{ vars.AZURE_WORKSPACE_NAME }}
+        
+        runs: |
+          az ml model create \
+            --name diabetes-classification-model \
+            --type mlflow_model \
+            --path "azureml://jobs/${{ steps.train.outputs.job_name }}/outputs/model_output" \
+            --resource-group "$RG" \
+            --workspace-name "$WS"

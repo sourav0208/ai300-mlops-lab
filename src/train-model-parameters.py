@@ -3,6 +3,7 @@ import glob
 import json
 import os
 import mlflow
+import mlflow.sklearn
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -23,6 +24,10 @@ def main(args):
 
     # evaluate model
     metrics = eval_model(model, X_test, y_test)
+
+    if args.model_output:
+        mlflow.sklearn.save_model(model, args.model_output)
+        print(f"saved model to {args.model_output}")
 
     # persist metrics so the workflow can comment the actual values deterministically
     if args.metrics_output:
@@ -111,6 +116,8 @@ def parse_args():
                         type=float, default=0.01)
     parser.add_argument("--metrics_output", dest='metrics_output',
                         type=str, default=None)
+
+    parser.add_argument("--model_output", dest= "model_output", type=str, default=None)
 
     # parse args
     args = parser.parse_args()
