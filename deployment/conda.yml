@@ -1,0 +1,15 @@
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - mlflow==2.22.1
+      - scikit-learn==1.7.2
+      - pandas==2.3.3
+      - numpy==2.2.6
+      - azureml-inference-server-http
+      - azureml-ai-monitoring
+
+name: diabetes-inference-env

@@ -5,5 +5,9 @@ endpoint_name: diabetes-sourav-endpoint
 
 model: azureml:diabetes-classification-model:1
 
+environment:
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu22.04
+  conda_file: conda.yml
+
 instance_type: Standard_D2a_v4 #what size VM should serve predictions
 instance_count: 1 # how many of those VM should run. More VM to handle more traffic
