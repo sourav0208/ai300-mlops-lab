@@ -1,0 +1,35 @@
+name: Train model in dev
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  train-dev:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Sign in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS}}
+
+      - name: Install Azure ML CLI
+        run: |
+          az extension add --name ml --version 2.44.1 --yes
+
+      - name: Submit Azure ML training job
+        env: 
+          RG: ${{vars.AZURE_RESOURCE_GROUP}}
+          WS: ${{vars.AZURE_WORKSPACE_NAME}}
+        run: |
+          az ml job create\
+          --file src/job.yml\
+          --resource-group "$RG" \
+          --workspace-name "$WS"\
+          --stream
