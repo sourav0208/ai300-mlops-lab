@@ -17,19 +17,51 @@ jobs:
       - name: Sign in to Azure
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS}}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Install Azure ML CLI
         run: |
           az extension add --name ml --version 2.44.1 --yes
 
-      - name: Submit Azure ML training job
-        env: 
-          RG: ${{vars.AZURE_RESOURCE_GROUP}}
-          WS: ${{vars.AZURE_WORKSPACE_NAME}}
+      - name: Run Azure ML training job
+        id: train
+        shell: bash
+        env:
+          RG: ${{ vars.AZURE_RESOURCE_GROUP }}
+          WS: ${{ vars.AZURE_WORKSPACE_NAME }}
         run: |
+          set -o pipefail
+
+          JOB_NAME="diabetes-dev-${{ github.run_id }}"
+
+          echo "Azure ML job: $JOB_NAME"
+
           az ml job create \
             --file src/job.yml \
+            --name "$JOB_NAME" \
             --resource-group "$RG" \
-            --workspace-name "$WS"\
-            --stream
+            --workspace-name "$WS" \
+            --stream | tee training_output.log
+
+          echo "job_name=$JOB_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Extract training metrics
+        id: metrics
+        shell: bash
+        run: |
+          ACC=$(grep -Eo 'Accuracy: [0-9.]+' training_output.log \
+            | tail -1 | awk '{print $2}')
+
+          AUC=$(grep -Eo 'AUC: [0-9.]+' training_output.log \
+            | tail -1 | awk '{print $2}')
+
+          echo "Accuracy: $ACC"
+          echo "AUC: $AUC"
+
+          echo "accuracy=$ACC" >> "$GITHUB_OUTPUT"
+          echo "auc=$AUC" >> "$GITHUB_OUTPUT"
+
+          echo "## Development training results" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Azure ML job: ${{ steps.train.outputs.job_name }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Accuracy: $ACC" >> "$GITHUB_STEP_SUMMARY"
+          echo "- AUC: $AUC" >> "$GITHUB_STEP_SUMMARY"
