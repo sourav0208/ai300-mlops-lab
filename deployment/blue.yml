@@ -5,5 +5,5 @@ endpoint_name: diabetes-sourav-endpoint
 
 model: azureml:diabetes-classification-model:1
 
-instance_type: Standard_A2_v2 #what size VM should serve predictions
+instance_type: Standard_D2a_v4 #what size VM should serve predictions
 instance_count: 1 # how many of those VM should run. More VM to handle more traffic
