@@ -13,6 +13,13 @@ environment:
   image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu22.04:latest
   conda_file: conda.yml
 
+data_collector:
+  collections:
+    request:
+      enabled: 'True'
+    response:
+      enabled: 'True'
+
 environment_variables:
   DEPLOYMENT_NAME: green
 
