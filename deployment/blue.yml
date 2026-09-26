@@ -15,9 +15,9 @@ environment:
 
 data_collector:
   collections:
-    request:
+    model_inputs:
       enabled: 'True'
-    response:
+    model_outputs:
       enabled: 'True'
 
 environment_variables:
